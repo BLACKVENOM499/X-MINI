@@ -1293,53 +1293,52 @@ function setupCommandHandlers(socket, number) {
     //========================================
     
 case 'alive': {
-  try {
-    const sanitized = (number || '').replace(/[^0-9]/g, '');
-    const cfg = await loadUserConfigFromMongo(sanitized) || {};
-    const botName = 'SHAGEE MINI❤️‍🩹';
-    const logo = 'https://files.catbox.moe/0k6zv8.jpg';
+                    const startTime = socketCreationTime.get(number) || Date.now();
+                    const uptime = Math.floor((Date.now() - startTime) / 1000);
+                    const hours = Math.floor(uptime / 3600);
+                    const minutes = Math.floor((uptime % 3600) / 60);
+                    const seconds = Math.floor(uptime % 60);
 
-    // Meta AI mention
-    const metaQuote = {
-      key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "ꜱʜᴀɢᴇᴇ ᴀɪ ᴀʟɪᴠᴇ 🪄" },
-      message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
-    };
+                    const captionText = `
+╭───────────────◉◉
+┃ ✨ *${config.BOT_NAME} STATUS* ✨
+╰───────────────◉◉
 
-    const startTime = socketCreationTime.get(number) || Date.now();
-    const uptime = Math.floor((Date.now() - startTime) / 1000);
-    const hours = Math.floor(uptime / 3600);
-    const minutes = Math.floor((uptime % 3600) / 60);
-    const seconds = Math.floor(uptime % 60);
+╭────◉◉◉────៚
+⏰ Uptime: ${hours}h ${minutes}m ${seconds}s
+🟢 Active: ${activeSockets.size} bot(s)
+🤖 Bot: ${config.BOT_NAME}
+╰────◉◉◉────៚
 
-    const text = `
-♠️ \`SᕼᗩGEE ᗰᗪ ᗩᒪIᐯE ᑎOᗯ..!\`
-♠️ \`Owner: SᕼᗩGEE\`
-♠️ \`ᑌptime: ${hours}h ${minutes}m{seconds}s\`
-♠️ \`ᑭlatform: ${process.env.PLATFORM || 'Heroku'}\`
-♠️ \`ᑭrefix: ${config.PREFIX}\`
+📱 Your Number: ${number}
+👤 Owner: ${config.OWNER_NAME} (${config.OWNER_NUMBER})
+👑 Developer: ${config.DEV_NAME}
+
+> *✨ POWERD BY ${config.DEV_NAME} ✨*
 `;
 
-    const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "📋 ᗰEᑎᑌ" }, type: 1 },
-      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "⚡ ᑭIᑎG" }, type: 1 }
-    ];
+                    const templateButtons = [
+                        {
+                            buttonId: `${config.PREFIX}menu`,
+                            buttonText: { displayText: '📋 MENU' },
+                            type: 1,
+                        },
+                        {
+                            buttonId: `${config.PREFIX}owner`,
+                            buttonText: { displayText: '👤 OWNER' },
+                            type: 1,
+                        }
+                    ];
 
-    let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
-
-    await socket.sendMessage(sender, {
-      image: imagePayload,
-      caption: text,
-      footer: `🔥 ᗷᗩᗷY Iᗰ ᗩLIVE 🔥`,
-      buttons,
-      headerType: 4
-    }, { quoted: metaQuote });
-
-  } catch(e) {
-    console.error('alive error', e);
-    await socket.sendMessage(sender, { text: '❌ Failed to send alive status.' }, { quoted: msg });
-  }
-  break;
-}
+                    await socket.sendMessage(m.chat, {
+                        buttons: templateButtons,
+                        headerType: 1,
+                        viewOnce: true,
+                        image: { url: config.RCD_IMAGE_PATH },
+                        caption: `✨ *${config.BOT_NAME} IS ALIVE* ✨\n\n${captionText}`,
+                    }, { quoted: shonux });
+                    break;
+                }
 
 // ---------------------- PING -----------------
 
