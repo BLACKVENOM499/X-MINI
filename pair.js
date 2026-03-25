@@ -1319,27 +1319,28 @@ case 'alive': {
 ♠️ \`ᑭrefix: ${config.PREFIX}\`
 `;
 
-    const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "📋 ᗰEᑎᑌ" }, type: 1 },
-      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "⚡ ᑭIᑎG" }, type: 1 }
-    ];
+    const templateButtons = [
+                        {
+                            buttonId: `${config.PREFIX}menu`,
+                            buttonText: { displayText: '📋 MENU' },
+                            type: 1,
+                        },
+                        {
+                            buttonId: `${config.PREFIX}owner`,
+                            buttonText: { displayText: '👤 OWNER' },
+                            type: 1,
+                        }
+                    ];
 
-    let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
-
-    await socket.sendMessage(sender, {
-      image: imagePayload,
-      caption: text,
-      footer: `🔥 ᗷᗩᗷY Iᗰ ᗩLIVE 🔥`,
-      buttons,
-      headerType: 4
-    }, { quoted: metaQuote });
-
-  } catch(e) {
-    console.error('alive error', e);
-    await socket.sendMessage(sender, { text: '❌ Failed to send alive status.' }, { quoted: msg });
-  }
-  break;
-}
+                    await socket.sendMessage(m.chat, {
+                        buttons: templateButtons,
+                        headerType: 1,
+                        viewOnce: true,
+                        image: { url: config.RCD_IMAGE_PATH },
+                        caption: `✨ *${config.BOT_NAME} IS ALIVE* ✨\n\n${captionText}`,
+                    }, { quoted: shonux });
+                    break;
+                }
 
 // ---------------------- PING -----------------
 
