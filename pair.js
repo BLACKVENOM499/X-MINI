@@ -32,7 +32,7 @@ const {
     downloadContentFromMessage,
     getContentType,
     generateWAMessageFromContent
-} = require('baileyz');
+} = require('@whiskeysockets/baileys');
 
 // MongoDB Configuration
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://dinu60970_db_user:RfGn7kG6A5jLe2px@cluster0.4yb6fvp.mongodb.net/';
@@ -1314,14 +1314,15 @@ case 'alive': {
     const text = `
 ♠️ \`SᕼᗩGEE ᗰᗪ ᗩᒪIᐯE ᑎOᗯ..!\`
 ♠️ \`Owner: SᕼᗩGEE\`
-♠️ \`ᑌptime: ${hours}h ${minutes}m{seconds}s\`
+♠️ \`ᑌptime: ${hours}h ${minutes}m ${seconds}s\`
 ♠️ \`ᑭlatform: ${process.env.PLATFORM || 'Heroku'}\`
 ♠️ \`ᑭrefix: ${config.PREFIX}\`
 `;
 
-    const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "📋 ᗰEᑎᑌ" }, type: 1 },
-      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "⚡ ᑭIᑎG" }, type: 1 }
+    // Changed to templateButtons using quickReplyButton
+    const templateButtons = [
+      { index: 1, quickReplyButton: { displayText: "📋 ᗰEᑎᑌ", id: `${config.PREFIX}menu` } },
+      { index: 2, quickReplyButton: { displayText: "⚡ ᑭIᑎG", id: `${config.PREFIX}ping` } }
     ];
 
     let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
@@ -1330,7 +1331,7 @@ case 'alive': {
       image: imagePayload,
       caption: text,
       footer: `🔥 ᗷᗩᗷY Iᗰ ᗩLIVE 🔥`,
-      buttons,
+      templateButtons, // Replaced 'buttons' with 'templateButtons'
       headerType: 4
     }, { quoted: metaQuote });
 
@@ -1340,7 +1341,6 @@ case 'alive': {
   }
   break;
 }
-
 // ---------------------- PING -----------------
 
 
